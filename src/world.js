@@ -2,7 +2,7 @@ var Class = require('./class'),
     Node = require('./node'),
     Family = require('./family');
 
-var World = Class.extend({
+var World = module.exports = Class.extend({
     /**
      * @constructor
      */

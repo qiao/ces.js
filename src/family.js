@@ -1,6 +1,6 @@
-var Class = require('./Class'),
-    LinkedList = require('./LinkedList'),
-    Node = require('./Node');
+var Class = require('./class'),
+    LinkedList = require('./linkedlist'),
+    Node = require('./node');
 
 var Family = module.exports = Class.extend({
     /**
@@ -18,10 +18,13 @@ var Family = module.exports = Class.extend({
 
         /**
          * A linked list holding the entity nodes.
-         * @public
-         * @readonly
+         * @private
          */
-        this.entities = new LinkedList();
+        this._entities = new LinkedList();
+    },
+
+    getEntities: function () {
+        return this._entities.toArray();
     },
 
     /**
@@ -40,7 +43,7 @@ var Family = module.exports = Class.extend({
 
         node = new Node(entity);
         this._entityMap[entity.id] = node;
-        this.entities.add(node);
+        this._entities.add(node);
     },
 
     removeEntityIfMatch: function (entity) {
@@ -49,7 +52,7 @@ var Family = module.exports = Class.extend({
         node = this._entityMap[entity.id];
         if (node) {
             this._entityMap[entity.id] = undefined;
-            this.entities.remove(node);
+            this._entities.remove(node);
         }
     },
 
@@ -72,7 +75,7 @@ var Family = module.exports = Class.extend({
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
                 this._entityMap[entity.id] = undefined;
-                this.entities.remove(node);
+                this._entities.remove(node);
             }
         }
     },

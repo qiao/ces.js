@@ -1,4 +1,4 @@
-var Class = require('./Class');
+var Class = require('./class');
 
 var System = module.exports = Class.extend({
     init: function () {

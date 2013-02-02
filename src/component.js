@@ -1,4 +1,4 @@
-var Class = require('./Class');
+var Class = require('./class');
 
 var Component = module.exports = Class.extend({
     /**

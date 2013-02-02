@@ -1,5 +1,5 @@
-var Class  = require('./Class'),
-    Signal = require('./Signal');
+var Class  = require('./class'),
+    Signal = require('./signal');
 
 /**
  * @class

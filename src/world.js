@@ -1,6 +1,6 @@
-var Class = require('./Class'),
-    Node = require('./Node'),
-    Family = require('./Family');
+var Class = require('./class'),
+    Node = require('./node'),
+    Family = require('./family');
 
 var World = Class.extend({
     /**
@@ -70,7 +70,7 @@ var World = Class.extend({
             );
         }
 
-        return families[familyId];
+        return families[familyId].getEntities();
     },
 
     /**

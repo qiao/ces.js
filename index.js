@@ -1,7 +1,7 @@
 module.exports = {
-    Class     : require('./src/Class'),
-    Component : require('./src/Component'),
-    Entity    : require('./src/Entity'),
-    System    : require('./src/System'),
-    World     : require('./src/World')
+    Class     : require('./src/class'),
+    Component : require('./src/component'),
+    Entity    : require('./src/entity'),
+    System    : require('./src/system'),
+    World     : require('./src/world')
 };

@@ -1,4 +1,4 @@
-var Class = require('./Class');
+var Class = require('./class');
 
 var LinkedList = module.exports = Class.extend({
     init: function () {
@@ -31,5 +31,16 @@ var LinkedList = module.exports = Class.extend({
 
     clear: function () {
         this.head = this.tail = null;
+    },
+
+    toArray: function () {
+        var array, node;
+
+        array = [];
+        for (node = this.head; node; node = node.next) {
+            array.push(node.value);
+        }
+
+        return array;
     }
 });

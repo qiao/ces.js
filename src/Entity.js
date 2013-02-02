@@ -1,6 +1,5 @@
 var Class  = require('./Class'),
-    Signal = require('./Signal'),
-    Dict   = require('./Dict');
+    Signal = require('./Signal');
 
 /**
  * @class

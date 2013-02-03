@@ -1,5 +1,5 @@
 var Class = require('./class'),
-    LinkedList = require('./linkedlist'),
+    EntityList = require('./entitylist'),
     Node = require('./node');
 
 var Family = module.exports = Class.extend({
@@ -11,20 +11,11 @@ var Family = module.exports = Class.extend({
         this._componentNames = componentNames;
 
         /**
-         * An object mapping from entity ids to the entity nodes.
-         * @private
-         */
-        this._entityMap = {};
-
-        /**
          * A linked list holding the entity nodes.
-         * @private
+         * @public
+         * @readonly
          */
-        this._entities = new LinkedList();
-    },
-
-    getEntities: function () {
-        return this._entities.toArray();
+        this.entities = new EntityList();
     },
 
     /**
@@ -34,26 +25,13 @@ var Family = module.exports = Class.extend({
      * @param {Entity} entity
      */
     addEntityIfMatch: function (entity) {
-        var node;
-
-        // return if the entity is already in this family or does not match
-        if (this._entityMap[entity.id] || !this._matchEntity(entity)) {
-            return;
+        if (!this.entities.has(entity) && this._matchEntity(entity)) {
+            this.entities.add(entity);
         }
-
-        node = new Node(entity);
-        this._entityMap[entity.id] = node;
-        this._entities.add(node);
     },
 
     removeEntityIfMatch: function (entity) {
-        var node;
-
-        node = this._entityMap[entity.id];
-        if (node) {
-            this._entityMap[entity.id] = undefined;
-            this._entities.remove(node);
-        }
+        this.entities.remove(entity);
     },
 
     onComponentAdded: function (entity, componentName) {
@@ -61,12 +39,10 @@ var Family = module.exports = Class.extend({
     },
 
     onComponentRemoved: function (entity, componentName) {
-        var node, names, name, i, len;
-
-        node = this._entityMap[entity.id];
+        var names, i, len;
 
         // return if the entity is not in this family
-        if (!node) {
+        if (!this.entities.has(entity)) {
             return;
         }
 
@@ -74,8 +50,7 @@ var Family = module.exports = Class.extend({
         names = this._componentNames;
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
-                this._entityMap[entity.id] = undefined;
-                this._entities.remove(node);
+                this.entities.remove(entity);
             }
         }
     },

@@ -1,6 +1,6 @@
 var Class = require('./class'),
-    Node = require('./node'),
-    Family = require('./family');
+    Family = require('./family'),
+    EntityList = require('./entitylist');
 
 var World = module.exports = Class.extend({
     /**
@@ -9,6 +9,7 @@ var World = module.exports = Class.extend({
     init: function () {
         this._families = {};
         this._systems = [];
+        this._entities = new EntityList();
     },
 
     /**
@@ -40,6 +41,8 @@ var World = module.exports = Class.extend({
             self._onComponentRemoved(entity, component);
         });
 
+        this._entities.add(entity);
+
         return this;
     },
 
@@ -53,13 +56,15 @@ var World = module.exports = Class.extend({
         for (i = 0, len = families.length; i < len; ++i) {
             families[i].removeEntityIfMatch(entity);
         }
+
+        this._entities.remove(entity);
     },
 
     /**
      * @public
      */
     getEntities: function (/* arguments */) {
-        var familyId, families;
+        var familyId, families, entity;
 
         familyId = '$' + Array.prototype.join.call(arguments, ',');
         families = this._families;
@@ -68,9 +73,12 @@ var World = module.exports = Class.extend({
             families[familyId] = new Family(
                 Array.prototype.slice.call(arguments)
             );
+            for (entity = this._entities.head; entity; entity = entity.next) {
+                families[familyId].addEntityIfMatch(entity);
+            }
         }
 
-        return families[familyId].getEntities();
+        return families[familyId].entities;
     },
 
     /**

@@ -7,14 +7,24 @@ var Family = module.exports = Class.extend({
      * @param {Array} componentNames
      */
     init: function (componentNames) {
+        /**
+         * @private
+         */
         this._componentNames = componentNames;
 
         /**
          * A linked list holding the entities;
-         * @public
-         * @readonly
+         * @private
          */
-        this.entities = new EntityList();
+        this._entities = new EntityList();
+    },
+
+    /**
+     * Get the entities of this family.
+     * @public
+     */
+    getEntities: function () {
+        return this._entities.toArray();
     },
 
     /**
@@ -24,13 +34,13 @@ var Family = module.exports = Class.extend({
      * @param {Entity} entity
      */
     addEntityIfMatch: function (entity) {
-        if (!this.entities.has(entity) && this._matchEntity(entity)) {
-            this.entities.add(entity);
+        if (!this._entities.has(entity) && this._matchEntity(entity)) {
+            this._entities.add(entity);
         }
     },
 
     removeEntityIfMatch: function (entity) {
-        this.entities.remove(entity);
+        this._entities.remove(entity);
     },
 
     onComponentAdded: function (entity, componentName) {
@@ -41,7 +51,7 @@ var Family = module.exports = Class.extend({
         var names, i, len;
 
         // return if the entity is not in this family
-        if (!this.entities.has(entity)) {
+        if (!this._entities.has(entity)) {
             return;
         }
 
@@ -49,7 +59,7 @@ var Family = module.exports = Class.extend({
         names = this._componentNames;
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
-                this.entities.remove(entity);
+                this._entities.remove(entity);
             }
         }
     },

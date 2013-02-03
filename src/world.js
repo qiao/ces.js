@@ -89,7 +89,7 @@ var World = module.exports = Class.extend({
             }
         }
 
-        return families[familyId].entities.toArray();
+        return families[familyId].getEntities();
     },
 
     /**

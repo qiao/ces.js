@@ -499,11 +499,17 @@ Class.extend = function(prop) {
 
 require.define("/src/component.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
+/**
+ * A component is the container of some properties that
+ * the entity possesses. It may also contain some methods.
+ * @class
+ */
 var Component = module.exports = Class.extend({
     /**
      * Name of this component. It is expected to be overriden and
      * should be unique.
      * @public
+     * @readonly
      */
     name: ''
 });
@@ -598,15 +604,32 @@ Entity._id = 0;
 
 require.define("/src/signal.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
+/**
+ * A signal can register listeners add invoke the listeners with messages.
+ * @class
+ */
 var Signal = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         this._listeners = [];
     },
 
+    /**
+     * Add a listener to this signal.
+     * @public
+     * @param {Function} listener
+     */
     add: function (listener) {
         this._listeners.push(listener);
     },
 
+    /**
+     * Remove a listener from this signal.
+     * @public
+     * @param {Function} listener
+     */
     remove: function (listener) {
         var listeners = this._listeners,
             i, len;
@@ -620,7 +643,12 @@ var Signal = module.exports = Class.extend({
         return false;
     },
 
-    emit: function () {
+    /**
+     * Emit a message.
+     * @public
+     * @param {...*} messages
+     */
+    emit: function (/* messages */) {
         var messages = arguments,
             listeners = this._listeners,
             i, len;
@@ -635,7 +663,14 @@ var Signal = module.exports = Class.extend({
 
 require.define("/src/system.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
+/**
+ * A system is responsible for updating the entities.
+ * @class
+ */
 var System = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         /**
          * This property will be set when the system is added to a world.
@@ -645,7 +680,9 @@ var System = module.exports = Class.extend({
     },
 
     /**
+     * Update the entities.
      * @public
+     * @param {Number} dt time interval between updates
      */
     update: function (dt) {
         throw new Error('Subclassed should override this method');
@@ -659,6 +696,7 @@ require.define("/src/world.js",function(require,module,exports,__dirname,__filen
     EntityList = require('./entitylist');
 
 /**
+ * A world is the container of all the entities and systems.
  * @class
  */
 var World = module.exports = Class.extend({
@@ -671,12 +709,22 @@ var World = module.exports = Class.extend({
          * @private
          */
         this._families = {};
+
+        /**
+         * @private
+         */
         this._systems = [];
+
+        /**
+         * @private
+         */
         this._entities = new EntityList();
     },
 
     /**
+     * Add a system to this world.
      * @public
+     * @param {System} system
      */
     addSystem: function (system) {
         system.world = this;
@@ -685,7 +733,25 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Remove a system from this world.
      * @public
+     * @param {System} system
+     */
+    removeSystem: function (system) {
+        var systems, i, len;
+
+        systems = this._systems;
+        for (i = 0, len = systems.length; i < len; ++i) {
+            if (systems[i] === system) {
+                systems.splice(i, 1);
+            }
+        }
+    },
+
+    /**
+     * Add an entity to this world.
+     * @public
+     * @param {Entity} entity
      */
     addEntity: function (entity) {
         var families, familyId, self;
@@ -711,6 +777,7 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Remove and entity from this world.
      * @public
      * @param {Entity} entity
      */
@@ -720,17 +787,19 @@ var World = module.exports = Class.extend({
         // try to remove the entity from each family
         families = this._families;
         for (familyId in families) {
-            families[familyId].removeEntityIfMatch(entity);
+            families[familyId].removeEntity(entity);
         }
 
         this._entities.remove(entity);
     },
 
     /**
+     * Get the entities having all the specified componets.
      * @public
-     * @param {...String} componentName
+     * @param {...String} componentNames
+     * @return {Array} an array of entities.
      */
-    getEntities: function (componetName) {
+    getEntities: function (/* componentNames */) {
         var familyId, families, node;
 
         familyId = '$' + Array.prototype.join.call(arguments, ',');
@@ -749,7 +818,9 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * For each system in the world, call its `update` method.
      * @public
+     * @param {Number} dt time interval between updates.
      */
     update: function (dt) {
         var systems, i, len;
@@ -761,7 +832,10 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Handler to be called when a component is added to an entity.
      * @private
+     * @param {Entity} entity
+     * @param {String} componentName
      */
     _onComponentAdded: function (entity, componentName) {
         var families, familyId;
@@ -773,7 +847,10 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Handler to be called when component is removed from an entity.
      * @private
+     * @param {Entity} entity
+     * @param {String} componentName
      */
     _onComponentRemoved: function (entity, componentName) {
         var families, familyId;
@@ -790,6 +867,10 @@ var World = module.exports = Class.extend({
 require.define("/src/family.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class'),
     EntityList = require('./entitylist');
 
+/**
+ * A family is a collection of entities having all the specified components.
+ * @class
+ */
 var Family = module.exports = Class.extend({
     /**
      * @constructor
@@ -811,6 +892,7 @@ var Family = module.exports = Class.extend({
     /**
      * Get the entities of this family.
      * @public
+     * @return {Array}
      */
     getEntities: function () {
         return this._entities.toArray();
@@ -819,7 +901,6 @@ var Family = module.exports = Class.extend({
     /**
      * Add the entity into the family if match.
      * @public
-     * @function
      * @param {Entity} entity
      */
     addEntityIfMatch: function (entity) {
@@ -828,14 +909,32 @@ var Family = module.exports = Class.extend({
         }
     },
 
-    removeEntityIfMatch: function (entity) {
+    /**
+     * Remove the entity into the family if match.
+     * @public
+     * @function
+     * @param {Entity} entity
+     */
+    removeEntity: function (entity) {
         this._entities.remove(entity);
     },
 
+    /**
+     * Handler to be called when a component is added to an entity.
+     * @public
+     * @param {Entity} entity
+     * @param {String} componentName
+     */
     onComponentAdded: function (entity, componentName) {
         this.addEntityIfMatch(entity);
     },
 
+    /**
+     * Handler to be called when a component is removed from an entity.
+     * @public
+     * @param {Entity} entity
+     * @param {String} componentName
+     */
     onComponentRemoved: function (entity, componentName) {
         var names, i, len;
 
@@ -854,9 +953,8 @@ var Family = module.exports = Class.extend({
     },
 
     /**
-     * Check if the entity belongs to this family.
+     * Check if an entity belongs to this family.
      * @private
-     * @function
      * @param {Entity} entity
      * @return {Boolean}
      */
@@ -879,6 +977,11 @@ var Family = module.exports = Class.extend({
 
 require.define("/src/entitylist.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
+/**
+ * An entity node is a wrapper around an entity, to be added into
+ * the entity list.
+ * @class
+ */
 var EntityNode = Class.extend({
     init: function (entity) {
         this.entity = entity;
@@ -887,7 +990,15 @@ var EntityNode = Class.extend({
     }
 });
 
+/**
+ * An entity list is a doubly-linked-list which allows the
+ * entities to be added and removed efficiently.
+ * @class
+ */
 var EntityList = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         /**
          * @public
@@ -908,12 +1019,18 @@ var EntityList = module.exports = Class.extend({
         this.length = 0;
 
         /**
-         * Map from entity id to entity node.
+         * Map from entity id to entity node,
+         * for O(1) find and deletion.
          * @private
          */
         this._entities = {};
     },
 
+    /**
+     * Add an entity into this list.
+     * @public
+     * @param {Entity} entity
+     */
     add: function (entity) {
         var node = new EntityNode(entity);
 
@@ -929,6 +1046,11 @@ var EntityList = module.exports = Class.extend({
         this._entities[entity.id] = node;
     },
 
+    /**
+     * Remove an entity from this list.
+     * @public
+     * @param {Entity} entity
+     */
     remove: function (entity) {
         var node = this._entities[entity.id];
 
@@ -951,16 +1073,31 @@ var EntityList = module.exports = Class.extend({
         delete this._entities[entity.id];
     },
 
+    /**
+     * Check if this list has the entity.
+     * @public
+     * @param {Entity} entity
+     * @return {Boolean}
+     */
     has: function (entity) {
         return this._entities[entity.id] !== undefined;
     },
 
+    /**
+     * Remove all the entities from this list.
+     * @public
+     */
     clear: function () {
         this.head = this.tail = null;
         this.length = 0;
         this._entities = {};
     },
 
+    /**
+     * Return an array holding all the entities in this list.
+     * @public
+     * @return {Array}
+     */
     toArray: function () {
         var array, node;
 

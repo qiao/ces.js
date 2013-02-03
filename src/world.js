@@ -3,6 +3,7 @@ var Class = require('./class'),
     EntityList = require('./entitylist');
 
 /**
+ * A world is the container of all the entities and systems.
  * @class
  */
 var World = module.exports = Class.extend({
@@ -15,12 +16,22 @@ var World = module.exports = Class.extend({
          * @private
          */
         this._families = {};
+
+        /**
+         * @private
+         */
         this._systems = [];
+
+        /**
+         * @private
+         */
         this._entities = new EntityList();
     },
 
     /**
+     * Add a system to this world.
      * @public
+     * @param {System} system
      */
     addSystem: function (system) {
         system.world = this;
@@ -29,7 +40,25 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Remove a system from this world.
      * @public
+     * @param {System} system
+     */
+    removeSystem: function (system) {
+        var systems, i, len;
+
+        systems = this._systems;
+        for (i = 0, len = systems.length; i < len; ++i) {
+            if (systems[i] === system) {
+                systems.splice(i, 1);
+            }
+        }
+    },
+
+    /**
+     * Add an entity to this world.
+     * @public
+     * @param {Entity} entity
      */
     addEntity: function (entity) {
         var families, familyId, self;
@@ -55,6 +84,7 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Remove and entity from this world.
      * @public
      * @param {Entity} entity
      */
@@ -64,17 +94,19 @@ var World = module.exports = Class.extend({
         // try to remove the entity from each family
         families = this._families;
         for (familyId in families) {
-            families[familyId].removeEntityIfMatch(entity);
+            families[familyId].removeEntity(entity);
         }
 
         this._entities.remove(entity);
     },
 
     /**
+     * Get the entities having all the specified componets.
      * @public
-     * @param {...String} componentName
+     * @param {...String} componentNames
+     * @return {Array} an array of entities.
      */
-    getEntities: function (componetName) {
+    getEntities: function (/* componentNames */) {
         var familyId, families, node;
 
         familyId = '$' + Array.prototype.join.call(arguments, ',');
@@ -93,7 +125,9 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * For each system in the world, call its `update` method.
      * @public
+     * @param {Number} dt time interval between updates.
      */
     update: function (dt) {
         var systems, i, len;
@@ -105,7 +139,10 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Handler to be called when a component is added to an entity.
      * @private
+     * @param {Entity} entity
+     * @param {String} componentName
      */
     _onComponentAdded: function (entity, componentName) {
         var families, familyId;
@@ -117,7 +154,10 @@ var World = module.exports = Class.extend({
     },
 
     /**
+     * Handler to be called when component is removed from an entity.
      * @private
+     * @param {Entity} entity
+     * @param {String} componentName
      */
     _onComponentRemoved: function (entity, componentName) {
         var families, familyId;

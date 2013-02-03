@@ -1,14 +1,31 @@
 var Class = require('./class');
 
+/**
+ * A signal can register listeners add invoke the listeners with messages.
+ * @class
+ */
 var Signal = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         this._listeners = [];
     },
 
+    /**
+     * Add a listener to this signal.
+     * @public
+     * @param {Function} listener
+     */
     add: function (listener) {
         this._listeners.push(listener);
     },
 
+    /**
+     * Remove a listener from this signal.
+     * @public
+     * @param {Function} listener
+     */
     remove: function (listener) {
         var listeners = this._listeners,
             i, len;
@@ -22,7 +39,12 @@ var Signal = module.exports = Class.extend({
         return false;
     },
 
-    emit: function () {
+    /**
+     * Emit a message.
+     * @public
+     * @param {...*} messages
+     */
+    emit: function (/* messages */) {
         var messages = arguments,
             listeners = this._listeners,
             i, len;

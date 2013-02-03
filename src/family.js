@@ -1,6 +1,10 @@
 var Class = require('./class'),
     EntityList = require('./entitylist');
 
+/**
+ * A family is a collection of entities having all the specified components.
+ * @class
+ */
 var Family = module.exports = Class.extend({
     /**
      * @constructor
@@ -22,6 +26,7 @@ var Family = module.exports = Class.extend({
     /**
      * Get the entities of this family.
      * @public
+     * @return {Array}
      */
     getEntities: function () {
         return this._entities.toArray();
@@ -30,7 +35,6 @@ var Family = module.exports = Class.extend({
     /**
      * Add the entity into the family if match.
      * @public
-     * @function
      * @param {Entity} entity
      */
     addEntityIfMatch: function (entity) {
@@ -39,14 +43,32 @@ var Family = module.exports = Class.extend({
         }
     },
 
-    removeEntityIfMatch: function (entity) {
+    /**
+     * Remove the entity into the family if match.
+     * @public
+     * @function
+     * @param {Entity} entity
+     */
+    removeEntity: function (entity) {
         this._entities.remove(entity);
     },
 
+    /**
+     * Handler to be called when a component is added to an entity.
+     * @public
+     * @param {Entity} entity
+     * @param {String} componentName
+     */
     onComponentAdded: function (entity, componentName) {
         this.addEntityIfMatch(entity);
     },
 
+    /**
+     * Handler to be called when a component is removed from an entity.
+     * @public
+     * @param {Entity} entity
+     * @param {String} componentName
+     */
     onComponentRemoved: function (entity, componentName) {
         var names, i, len;
 
@@ -65,9 +87,8 @@ var Family = module.exports = Class.extend({
     },
 
     /**
-     * Check if the entity belongs to this family.
+     * Check if an entity belongs to this family.
      * @private
-     * @function
      * @param {Entity} entity
      * @return {Boolean}
      */

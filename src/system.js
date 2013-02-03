@@ -1,6 +1,13 @@
 var Class = require('./class');
 
+/**
+ * A system is responsible for updating the entities.
+ * @class
+ */
 var System = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         /**
          * This property will be set when the system is added to a world.
@@ -10,7 +17,9 @@ var System = module.exports = Class.extend({
     },
 
     /**
+     * Update the entities.
      * @public
+     * @param {Number} dt time interval between updates
      */
     update: function (dt) {
         throw new Error('Subclassed should override this method');

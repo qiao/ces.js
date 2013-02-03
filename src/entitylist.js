@@ -1,5 +1,10 @@
 var Class = require('./class');
 
+/**
+ * An entity node is a wrapper around an entity, to be added into
+ * the entity list.
+ * @class
+ */
 var EntityNode = Class.extend({
     init: function (entity) {
         this.entity = entity;
@@ -8,7 +13,15 @@ var EntityNode = Class.extend({
     }
 });
 
+/**
+ * An entity list is a doubly-linked-list which allows the
+ * entities to be added and removed efficiently.
+ * @class
+ */
 var EntityList = module.exports = Class.extend({
+    /**
+     * @constructor
+     */
     init: function () {
         /**
          * @public
@@ -29,12 +42,18 @@ var EntityList = module.exports = Class.extend({
         this.length = 0;
 
         /**
-         * Map from entity id to entity node.
+         * Map from entity id to entity node,
+         * for O(1) find and deletion.
          * @private
          */
         this._entities = {};
     },
 
+    /**
+     * Add an entity into this list.
+     * @public
+     * @param {Entity} entity
+     */
     add: function (entity) {
         var node = new EntityNode(entity);
 
@@ -50,6 +69,11 @@ var EntityList = module.exports = Class.extend({
         this._entities[entity.id] = node;
     },
 
+    /**
+     * Remove an entity from this list.
+     * @public
+     * @param {Entity} entity
+     */
     remove: function (entity) {
         var node = this._entities[entity.id];
 
@@ -72,16 +96,31 @@ var EntityList = module.exports = Class.extend({
         delete this._entities[entity.id];
     },
 
+    /**
+     * Check if this list has the entity.
+     * @public
+     * @param {Entity} entity
+     * @return {Boolean}
+     */
     has: function (entity) {
         return this._entities[entity.id] !== undefined;
     },
 
+    /**
+     * Remove all the entities from this list.
+     * @public
+     */
     clear: function () {
         this.head = this.tail = null;
         this.length = 0;
         this._entities = {};
     },
 
+    /**
+     * Return an array holding all the entities in this list.
+     * @public
+     * @return {Array}
+     */
     toArray: function () {
         var array, node;
 

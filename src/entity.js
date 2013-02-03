@@ -2,6 +2,7 @@ var Class  = require('./class'),
     Signal = require('./signal');
 
 /**
+ * An entity is a container of components.
  * @class
  */
 var Entity = module.exports = Class.extend({

@@ -92,7 +92,7 @@ requestAnimationFrame(function () {
 Installation (Browser)
 -------
 
-Download the [minified js file](http://qiao.github.com/ces.js/lib/ces-browser.min.js) and include it in your web page.
+Download the [minified js file](http://github.com/qiao/ces.js/raw/master/dist/ces-browser.min.js) and include it in your web page.
 
 ```html
 <script type="text/javascript" src="./ces-browser.min.js"></script>

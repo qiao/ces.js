@@ -1,5 +1,13 @@
 var Class = require('./class');
 
+var EntityNode = Class.extend({
+    init: function (entity) {
+        this.entity = entity;
+        this.prev = null;
+        this.next = null;
+    }
+});
+
 var EntityList = module.exports = Class.extend({
     init: function () {
         /**
@@ -21,59 +29,65 @@ var EntityList = module.exports = Class.extend({
         this.length = 0;
 
         /**
+         * Map from entity id to entity node.
          * @private
          */
-        this._entityIds = {};
+        this._entities = {};
     },
 
     add: function (entity) {
+        var node = new EntityNode(entity);
+
         if (this.head === null) {
-            this.head = this.tail = entity;
+            this.head = this.tail = node;
         } else {
-            entity.prev = this.tail;
-            this.tail.next = entity;
-            this.tail = entity;
+            node.prev = this.tail;
+            this.tail.next = node;
+            this.tail = node;
         }
+
         this.length += 1;
-        this._entityIds[entity.id] = true;
+        this._entities[entity.id] = node;
     },
 
     remove: function (entity) {
-        if (!this.has(entity)) {
+        var node = this._entities[entity.id];
+
+        if (node === undefined) {
             return;
         }
 
-        if (entity.prev === null) {
-            this.head = entity.next;
+        if (node.prev === null) {
+            this.head = node.next;
         } else {
-            entity.prev.next = entity.next;
+            node.prev.next = node.next;
         }
-        if (entity.next === null) {
-            this.tail = entity.prev;
+        if (node.next === null) {
+            this.tail = node.prev;
         } else {
-            entity.next.prev = entity.prev;
+            node.next.prev = node.prev;
         }
 
         this.length -= 1;
-        delete this._entityIds[entity.id];
+        delete this._entities[entity.id];
     },
 
     has: function (entity) {
-        return this._entityIds[entity.id] === true;
+        return this._entities[entity.id] !== undefined;
     },
 
     clear: function () {
         this.head = this.tail = null;
         this.length = 0;
-        this._entityIds = {};
+        this._entities = {};
     },
 
     toArray: function () {
-        var array, entity;
+        var array, node;
 
         array = [];
-        for (entity = this.head; entity; entity = entity.next) {
-            array.push(entity.value);
+        for (node = this.head; node; node = node.next) {
+            array.push(node.entity);
         }
 
         return array;

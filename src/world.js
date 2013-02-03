@@ -75,7 +75,7 @@ var World = module.exports = Class.extend({
      * @param {...String} componentName
      */
     getEntities: function (componetName) {
-        var familyId, families, entity;
+        var familyId, families, node;
 
         familyId = '$' + Array.prototype.join.call(arguments, ',');
         families = this._families;
@@ -84,8 +84,8 @@ var World = module.exports = Class.extend({
             families[familyId] = new Family(
                 Array.prototype.slice.call(arguments)
             );
-            for (entity = this._entities.head; entity; entity = entity.next) {
-                families[familyId].addEntityIfMatch(entity);
+            for (node = this._entities.head; node; node = node.next) {
+                families[familyId].addEntityIfMatch(node.entity);
             }
         }
 

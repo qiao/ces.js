@@ -16,16 +16,6 @@ var Entity = module.exports = Class.extend({
         this.id = Entity._id++;
 
         /**
-         * @public
-         */
-        this.next = null;
-
-        /**
-         * @public
-         */
-        this.prev = null;
-
-        /**
          * Map from component names to components.
          * @private
          * @property

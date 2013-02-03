@@ -1,4 +1,4 @@
-var CES = (function() {(function(){var require = function (file, cwd) {
+var CES = (function() {var require = function (file, cwd) {
     var resolved = require.resolve(file, cwd || '/');
     var mod = require.modules[resolved];
     if (!mod) throw new Error(
@@ -500,7 +500,7 @@ Class.extend = function(prop) {
 require.define("/src/component.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
 /**
- * A component is the container of some properties that
+ * The components is the container of some properties that
  * the entity possesses. It may also contain some methods.
  * @class
  */
@@ -510,6 +510,7 @@ var Component = module.exports = Class.extend({
      * should be unique.
      * @public
      * @readonly
+     * @property {String} name
      */
     name: ''
 });
@@ -520,6 +521,7 @@ require.define("/src/entity.js",function(require,module,exports,__dirname,__file
     Signal = require('./signal');
 
 /**
+ * The entity is the container of components.
  * @class
  */
 var Entity = module.exports = Class.extend({
@@ -605,7 +607,7 @@ Entity._id = 0;
 require.define("/src/signal.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
 /**
- * A signal can register listeners add invoke the listeners with messages.
+ * The signal can register listeners and invoke the listeners with messages.
  * @class
  */
 var Signal = module.exports = Class.extend({
@@ -664,7 +666,7 @@ var Signal = module.exports = Class.extend({
 require.define("/src/system.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
 /**
- * A system is responsible for updating the entities.
+ * The system is responsible for updating the entities.
  * @class
  */
 var System = module.exports = Class.extend({
@@ -696,7 +698,7 @@ require.define("/src/world.js",function(require,module,exports,__dirname,__filen
     EntityList = require('./entitylist');
 
 /**
- * A world is the container of all the entities and systems.
+ * The world is the container of all the entities and systems.
  * @class
  */
 var World = module.exports = Class.extend({
@@ -868,7 +870,7 @@ require.define("/src/family.js",function(require,module,exports,__dirname,__file
     EntityList = require('./entitylist');
 
 /**
- * A family is a collection of entities having all the specified components.
+ * The family is a collection of entities having all the specified components.
  * @class
  */
 var Family = module.exports = Class.extend({
@@ -978,7 +980,7 @@ var Family = module.exports = Class.extend({
 require.define("/src/entitylist.js",function(require,module,exports,__dirname,__filename,process,global){var Class = require('./class');
 
 /**
- * An entity node is a wrapper around an entity, to be added into
+ * The entity node is a wrapper around an entity, to be added into
  * the entity list.
  * @class
  */
@@ -991,7 +993,7 @@ var EntityNode = Class.extend({
 });
 
 /**
- * An entity list is a doubly-linked-list which allows the
+ * The entity list is a doubly-linked-list which allows the
  * entities to be added and removed efficiently.
  * @class
  */
@@ -1122,5 +1124,4 @@ require.define("/index.js",function(require,module,exports,__dirname,__filename,
 
 });
 require("/index.js");
-})();
 return require("/index.js");})();

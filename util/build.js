@@ -8,8 +8,11 @@ var fs         = require('fs'),
 function build(dest, options) {
     options = options || {};
 
-    var browserified = browserify.bundle(__dirname + '/../index.js'),
-        namespaced   = 'var CES = (function() {' + browserified + 'return require("/index.js");})();';
+    var bundle = browserify({ exports: ['require'] });
+    bundle.addEntry(__dirname + '/../index.js');
+
+    var browserified = bundle.bundle();
+    var namespaced   = 'var CES = (function() {' + browserified + 'return require("/index.js");})();';
 
     if (options.uglify) {
         fs.writeFileSync(dest, uglify.minify(namespaced, { fromString: true }).code);

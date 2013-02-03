@@ -58,7 +58,7 @@ In a real game there may be a lot of systems, like `CollisionSystem`,
 ```js
 var PhysicSystem = CES.System.extend({
     update: function (dt) {
-        var nodes, entities, position, velocity;
+        var entities, position, velocity;
 
         entities = this.world.getEntities('position', 'velocity');
 

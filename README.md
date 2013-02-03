@@ -69,7 +69,6 @@ var PhysicSystem = CES.System.extend({
         });
     }
 });
-world.addSystem(new MovementSystem());
 ```
 
 The world is the container of all the entities and systems.
@@ -81,7 +80,7 @@ var world = new CES.World();
 world.addEntity(hero);
 // ... add other entities
 
-world.addSystem(PhysicSystem);
+world.addSystem(new PhysicSystem());
 // ... add other systems
 
 requestAnimationFrame(function () {

@@ -1,6 +1,5 @@
 var Class = require('./class'),
-    EntityList = require('./entitylist'),
-    Node = require('./node');
+    EntityList = require('./entitylist');
 
 var Family = module.exports = Class.extend({
     /**
@@ -11,7 +10,7 @@ var Family = module.exports = Class.extend({
         this._componentNames = componentNames;
 
         /**
-         * A linked list holding the entity nodes.
+         * A linked list holding the entities;
          * @public
          * @readonly
          */

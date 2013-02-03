@@ -1,6 +1,6 @@
 {
     "name"            : "ces",
-    "version"         : "0.0.1",
+    "version"         : "0.0.2",
     "description"     : "Component-Entity-System framework for JavaScript games",
     "homepage"        : "https://github.com/qiao/ces.js",
     "keywords"        : ["component", "entity", "game"],

@@ -5,7 +5,7 @@ TEST_REPORTER = spec
 test:
 	@NODE_ENV=test \
 		./node_modules/.bin/mocha \
-		    --ui tdd \
+		    --ui bdd \
 			--require should \
 			--timeout $(TEST_TIMEOUT) \
 			--reporter $(TEST_REPORTER) \

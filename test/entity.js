@@ -1,4 +1,4 @@
-/*globals suite: true, setup: true, test: true */
+/*globals describe: true, it: true */
 
 var CES = require('../'),
     CompA = CES.Component.extend({ name: 'a' }),
@@ -6,8 +6,8 @@ var CES = require('../'),
     CompC = CES.Component.extend({ name: 'c' }),
     should = require('should');
 
-suite('entity', function () {
-    test('.id', function () {
+describe('entity', function () {
+    it('should have unique id', function () {
         var ea = new CES.Entity(),
             eb = new CES.Entity(),
             ec = new CES.Entity();
@@ -17,7 +17,7 @@ suite('entity', function () {
         ea.id.should.not.equal(ec.id);
     });
 
-    test('#addComponent()', function () {
+    it('should return true when checking added components', function () {
         var entity = new CES.Entity();
         entity.addComponent(new CompA());
         entity.addComponent(new CompB());
@@ -29,7 +29,7 @@ suite('entity', function () {
         entity.hasComponent('d').should.be.false;
     });
 
-    test('#removeComponent()', function () {
+    it('should return false when checking removed components', function () {
         var entity = new CES.Entity();
         entity.addComponent(new CompA());
         entity.addComponent(new CompB());
@@ -43,7 +43,7 @@ suite('entity', function () {
         entity.hasComponent('c').should.be.false;
     });
 
-    test('#getComponent()', function () {
+    it('should return the correct component', function () {
         var entity = new CES.Entity(),
             ca = new CompA(),
             cb = new CompB(),
@@ -59,7 +59,7 @@ suite('entity', function () {
         should.not.exist(entity.getComponent('d'));
     });
 
-    test('.onComponentAdded', function () {
+    it('should emit signals when adding components', function () {
         var entity = new CES.Entity(),
             collections = [];
 
@@ -73,7 +73,7 @@ suite('entity', function () {
         collections.should.eql([[entity, 'a'], [entity, 'b']]);
     });
 
-    test('.onComponentRemoved', function () {
+    it('should emit signals when removing components', function () {
         var entity = new CES.Entity(),
             collections = [];
 

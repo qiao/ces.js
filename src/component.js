@@ -1,7 +1,7 @@
 var Class = require('./class');
 
 /**
- * A component is the container of some properties that
+ * The components is the container of some properties that
  * the entity possesses. It may also contain some methods.
  * @class
  */
@@ -11,6 +11,7 @@ var Component = module.exports = Class.extend({
      * should be unique.
      * @public
      * @readonly
+     * @property {String} name
      */
     name: ''
 });

@@ -42,7 +42,7 @@ var Health = CES.Component.extend({
 });
 ```
 
-An entity is simply a container of the components.
+An entity is essentially a container of one or more components.
 
 ```js
 var hero = new CES.Entity();
@@ -51,8 +51,9 @@ hero.addComponent(new Velocity(0, 0));
 hero.addComponent(new Health(100));
 ```
 
-A system will get from the world the entities having one or more components,
-and update the components accordingly.
+The system is responsible for updating the entities.
+In a real game there may be a lot of systems, like `CollisionSystem`,
+`RenderSystem`, `ControlSystem` etc.
 
 ```js
 var PhysicSystem = CES.System.extend({
@@ -72,7 +73,8 @@ var PhysicSystem = CES.System.extend({
 ```
 
 The world is the container of all the entities and systems.
-Calling the `update` method will sequentially update all systems.
+Calling the `update` method will *sequentially* update all the systems,
+in the order they were added.
 
 ```js
 var world = new CES.World();

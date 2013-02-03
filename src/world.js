@@ -3,7 +3,7 @@ var Class = require('./class'),
     EntityList = require('./entitylist');
 
 /**
- * A world is the container of all the entities and systems.
+ * The world is the container of all the entities and systems.
  * @class
  */
 var World = module.exports = Class.extend({

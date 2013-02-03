@@ -1,7 +1,7 @@
 var Class = require('./class');
 
 /**
- * A signal can register listeners add invoke the listeners with messages.
+ * The signal can register listeners and invoke the listeners with messages.
  * @class
  */
 var Signal = module.exports = Class.extend({

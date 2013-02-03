@@ -1,7 +1,7 @@
 var Class = require('./class');
 
 /**
- * An entity node is a wrapper around an entity, to be added into
+ * The entity node is a wrapper around an entity, to be added into
  * the entity list.
  * @class
  */
@@ -14,7 +14,7 @@ var EntityNode = Class.extend({
 });
 
 /**
- * An entity list is a doubly-linked-list which allows the
+ * The entity list is a doubly-linked-list which allows the
  * entities to be added and removed efficiently.
  * @class
  */

@@ -2,7 +2,7 @@ var Class = require('./class'),
     EntityList = require('./entitylist');
 
 /**
- * A family is a collection of entities having all the specified components.
+ * The family is a collection of entities having all the specified components.
  * @class
  */
 var Family = module.exports = Class.extend({

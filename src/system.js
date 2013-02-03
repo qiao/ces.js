@@ -1,7 +1,7 @@
 var Class = require('./class');
 
 /**
- * A system is responsible for updating the entities.
+ * The system is responsible for updating the entities.
  * @class
  */
 var System = module.exports = Class.extend({

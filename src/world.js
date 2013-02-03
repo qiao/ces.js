@@ -2,11 +2,18 @@ var Class = require('./class'),
     Family = require('./family'),
     EntityList = require('./entitylist');
 
+/**
+ * @class
+ */
 var World = module.exports = Class.extend({
     /**
      * @constructor
      */
     init: function () {
+        /**
+         * A map from familyId to family
+         * @private
+         */
         this._families = {};
         this._systems = [];
         this._entities = new EntityList();
@@ -25,15 +32,18 @@ var World = module.exports = Class.extend({
      * @public
      */
     addEntity: function (entity) {
-        var families, i, len, self;
+        var families, familyId, self;
 
+        // try to add the entity into each family
         families = this._families;
-
-        for (i = 0, len = families.length; i < len; ++i) {
-            families[i].addEntityIfMatch(entity);
+        for (familyId in families) {
+            families[familyId].addEntityIfMatch(entity);
         }
 
         self = this;
+
+        // update the entity-family relationship whenever components are
+        // added to or removed from the entities
         entity.onComponentAdded.add(function (entity, component) {
             self._onComponentAdded(entity, component);
         });
@@ -42,19 +52,19 @@ var World = module.exports = Class.extend({
         });
 
         this._entities.add(entity);
-
-        return this;
     },
 
     /**
      * @public
+     * @param {Entity} entity
      */
     removeEntity: function (entity) {
-        var families, i, len;
+        var families, familyId;
 
+        // try to remove the entity from each family
         families = this._families;
-        for (i = 0, len = families.length; i < len; ++i) {
-            families[i].removeEntityIfMatch(entity);
+        for (familyId in families) {
+            families[familyId].removeEntityIfMatch(entity);
         }
 
         this._entities.remove(entity);
@@ -62,8 +72,9 @@ var World = module.exports = Class.extend({
 
     /**
      * @public
+     * @param {...String} componentName
      */
-    getEntities: function (/* arguments */) {
+    getEntities: function (componetName) {
         var familyId, families, entity;
 
         familyId = '$' + Array.prototype.join.call(arguments, ',');
@@ -97,11 +108,11 @@ var World = module.exports = Class.extend({
      * @private
      */
     _onComponentAdded: function (entity, componentName) {
-        var families, i, len;
+        var families, familyId;
 
         families = this._families;
-        for (i = 0, len = families.length; i < len; ++i) {
-            this._families.onComponentAdded(entity, componentName);
+        for (familyId in families) {
+            families[familyId].onComponentAdded(entity, componentName);
         }
     },
 
@@ -109,11 +120,11 @@ var World = module.exports = Class.extend({
      * @private
      */
     _onComponentRemoved: function (entity, componentName) {
-        var families, i, len;
+        var families, familyId;
 
         families = this._families;
-        for (i = 0, len = families.length; i < len; ++i) {
-            this._families.onComponentRemoved(entity, componentName);
+        for (familyId in families) {
+            families[familyId].onComponentRemoved(entity, componentName);
         }
     }
 });

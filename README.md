@@ -99,8 +99,6 @@ Download the [minified js file](http://github.com/qiao/ces.js/raw/master/dist/ce
 <script type="text/javascript" src="./ces-browser.min.js"></script>
 ```
 
-Now skip to the `Basic Usage` section of this readme.
-
 Installation (Node.js)
 ------
 

@@ -51,6 +51,7 @@ var World = module.exports = Class.extend({
         for (i = 0, len = systems.length; i < len; ++i) {
             if (systems[i] === system) {
                 systems.splice(i, 1);
+                return;
             }
         }
     },

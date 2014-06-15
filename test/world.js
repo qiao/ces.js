@@ -145,6 +145,43 @@ describe('world', function () {
         bListener.calledOnce.should.be.false;
     });
 
+    it('should emit signal when entity has component added', function() {
+        var world = new CES.World();
+
+        var abListener = sinon.spy();
+        var bListener = sinon.spy();
+        world.entityAdded('a', 'b').add(abListener);
+
+        var entity = new CES.Entity();
+        entity.addComponent(new CompA());
+        world.addEntity(entity);
+
+        abListener.calledOnce.should.be.false;
+
+        entity.addComponent(new CompB());
+
+        abListener.calledOnce.should.be.true;
+    });
+
+    it('should emit signal when entity has component removed', function() {
+        var world = new CES.World();
+
+        var abListener = sinon.spy();
+        var bListener = sinon.spy();
+        world.entityRemoved('a', 'b').add(abListener);
+
+        var entity = new CES.Entity();
+        entity.addComponent(new CompA());
+        entity.addComponent(new CompB());
+        world.addEntity(entity);
+
+        abListener.calledOnce.should.be.false;
+
+        entity.removeComponent('b');
+
+        abListener.calledOnce.should.be.true;
+    });
+
     describe('with system', function() {
         it('addToWorld should be called when system is added', function() {
             var world = new CES.World();

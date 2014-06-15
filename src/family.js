@@ -99,6 +99,7 @@ var Family = module.exports = Class.extend({
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
                 this._entities.remove(entity);
+                this.entityRemoved.emit(entity);
             }
         }
     },

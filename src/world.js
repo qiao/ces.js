@@ -166,6 +166,11 @@ var World = module.exports = Class.extend({
         return this._families[familyId].entityRemoved;
     },
 
+    /**
+     * Creates a family for the passed array of component names if it does not
+     * exist already.
+     * @param {Array.<String>} components
+     */
     _ensureFamilyExists: function(components) {
         var families = this._families;
         var familyId = this._getFamilyId(components);
@@ -180,6 +185,13 @@ var World = module.exports = Class.extend({
         }
     },
 
+    /**
+     * Returns the family ID for the passed array of component names. A family
+     * ID is a comma separated string of all component names with a '$'
+     * prepended.
+     * @param {Array.<String>} components
+     * @return {String} The family ID for the passed array of components.
+     */
     _getFamilyId: function(components) {
         return '$' + Array.prototype.join.call(components, ',');
     },

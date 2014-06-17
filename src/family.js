@@ -1,5 +1,6 @@
 var Class = require('./class'),
-    EntityList = require('./entitylist');
+    EntityList = require('./entitylist'),
+    Signal = require('./signal');
 
 /**
  * The family is a collection of entities having all the specified components.
@@ -21,6 +22,18 @@ var Family = module.exports = Class.extend({
          * @private
          */
         this._entities = new EntityList();
+
+        /**
+         * @public
+         * @readonly
+         */
+        this.entityAdded = new Signal();
+        
+        /**
+         * @public
+         * @readonly
+         */
+        this.entityRemoved = new Signal();
     },
 
     /**
@@ -40,6 +53,7 @@ var Family = module.exports = Class.extend({
     addEntityIfMatch: function (entity) {
         if (!this._entities.has(entity) && this._matchEntity(entity)) {
             this._entities.add(entity);
+            this.entityAdded.emit(entity);
         }
     },
 
@@ -50,7 +64,10 @@ var Family = module.exports = Class.extend({
      * @param {Entity} entity
      */
     removeEntity: function (entity) {
-        this._entities.remove(entity);
+        if (this._entities.has(entity)) {
+            this._entities.remove(entity);
+            this.entityRemoved.emit(entity);
+        }
     },
 
     /**
@@ -82,6 +99,7 @@ var Family = module.exports = Class.extend({
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
                 this._entities.remove(entity);
+                this.entityRemoved.emit(entity);
             }
         }
     },

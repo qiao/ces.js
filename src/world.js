@@ -34,8 +34,8 @@ var World = module.exports = Class.extend({
      * @param {System} system
      */
     addSystem: function (system) {
-        system.world = this;
         this._systems.push(system);
+        system.addedToWorld(this);
         return this;
     },
 
@@ -51,6 +51,7 @@ var World = module.exports = Class.extend({
         for (i = 0, len = systems.length; i < len; ++i) {
             if (systems[i] === system) {
                 systems.splice(i, 1);
+                system.removedFromWorld();
             }
         }
     },
@@ -107,21 +108,12 @@ var World = module.exports = Class.extend({
      * @return {Array} an array of entities.
      */
     getEntities: function (/* componentNames */) {
-        var familyId, families, node;
+        var familyId, families;
 
-        familyId = '$' + Array.prototype.join.call(arguments, ',');
-        families = this._families;
-        
-        if (!families[familyId]) {
-            families[familyId] = new Family(
-                Array.prototype.slice.call(arguments)
-            );
-            for (node = this._entities.head; node; node = node.next) {
-                families[familyId].addEntityIfMatch(node.entity);
-            }
-        }
+        familyId = this._getFamilyId(arguments);
+        this._ensureFamilyExists(arguments);
 
-        return families[familyId].getEntities();
+        return this._families[familyId].getEntities();
     },
 
     /**
@@ -136,6 +128,72 @@ var World = module.exports = Class.extend({
         for (i = 0, len = systems.length; i < len; ++i) {
             systems[i].update(dt);
         }
+    },
+
+    /**
+     * Returns the signal for entities added with the specified components. The
+     * signal is also emitted when a component is added to an entity causing it
+     * match the specified component names.
+     * @public
+     * @param {...String} componentNames
+     * @return {Signal} A signal which is emitted every time an entity with
+     *     specified components is added.
+     */
+    entityAdded: function(/* componentNames */) {
+        var familyId, families;
+
+        familyId = this._getFamilyId(arguments);
+        this._ensureFamilyExists(arguments);
+
+        return this._families[familyId].entityAdded;
+    },
+
+    /**
+     * Returns the signal for entities removed with the specified components.
+     * The signal is also emitted when a component is removed from an entity
+     * causing it to no longer match the specified component names.
+     * @public
+     * @param {...String} componentNames
+     * @return {Signal} A signal which is emitted every time an entity with
+     *     specified components is removed.
+     */
+    entityRemoved: function(/* componentNames */) {
+        var familyId, families;
+
+        familyId = this._getFamilyId(arguments);
+        this._ensureFamilyExists(arguments);
+
+        return this._families[familyId].entityRemoved;
+    },
+
+    /**
+     * Creates a family for the passed array of component names if it does not
+     * exist already.
+     * @param {Array.<String>} components
+     */
+    _ensureFamilyExists: function(components) {
+        var families = this._families;
+        var familyId = this._getFamilyId(components);
+
+        if (!families[familyId]) {
+            families[familyId] = new Family(
+                Array.prototype.slice.call(components)
+            );
+            for (var node = this._entities.head; node; node = node.next) {
+                families[familyId].addEntityIfMatch(node.entity);
+            }
+        }
+    },
+
+    /**
+     * Returns the family ID for the passed array of component names. A family
+     * ID is a comma separated string of all component names with a '$'
+     * prepended.
+     * @param {Array.<String>} components
+     * @return {String} The family ID for the passed array of components.
+     */
+    _getFamilyId: function(components) {
+        return '$' + Array.prototype.join.call(components, ',');
     },
 
     /**

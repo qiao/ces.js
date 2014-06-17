@@ -90,6 +90,43 @@ requestAnimationFrame(function () {
 })
 ```
 
+A system is notified when it is added or removed from the world:
+
+```js
+var MySystem = CES.System.extend({
+  addedToWorld: function(world)  {
+    // Code to handle being added to world. Remeber to call this._super.
+    this._super(world);
+  },
+  removedFromWorld: function(world) {
+    // Code to handle being removed from world.
+    this._super(world);
+  }
+});
+```
+
+The world emits signals when entities are added or removed. You can listen for
+specific entities and handle the signal accordingly:
+
+```js
+var MySystem = CES.System.extend({
+  addedToWorld: function(world) {
+    world.entityAdded('position', 'velocity').add(function(entity) {
+      // This function is called whenever an entity with both 'position' and
+      // 'velocity' components is added to the world. It can also be called when
+      // a component is added to an entity; for example, when an entity with
+      // only 'position' has 'velocity' added to it.
+    });
+    world.entityRemoved('position', 'velocity').add(function(entity) {
+      // This function is called whenever an entity with both 'position' and
+      // 'velocity' components is removed from the world. It can also be called 
+      // when a component is removed from an entity; for example, when an entity
+      // with both 'position' and 'velocity' has 'velocity' removed from it.
+    });
+  }
+});
+```
+
 Installation (Browser)
 -------
 

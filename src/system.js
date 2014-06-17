@@ -16,6 +16,14 @@ var System = module.exports = Class.extend({
         this.world = null;
     },
 
+    addedToWorld: function(world) {
+        this.world = world;
+    },
+
+    removedFromWorld: function(world) {
+        this.world = null;
+    },
+
     /**
      * Update the entities.
      * @public

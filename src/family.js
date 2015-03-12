@@ -28,7 +28,6 @@ var Family = module.exports = Class.extend({
          * @readonly
          */
         this.entityAdded = new Signal();
-        
         /**
          * @public
          * @readonly
@@ -86,7 +85,7 @@ var Family = module.exports = Class.extend({
      * @param {Entity} entity
      * @param {String} componentName
      */
-    onComponentRemoved: function (entity, componentName) {
+    onComponentRemoved: function (entity, componentName, removedComponent) {
         var names, i, len;
 
         // return if the entity is not in this family
@@ -99,7 +98,7 @@ var Family = module.exports = Class.extend({
         for (i = 0, len = names.length; i < len; ++i) {
             if (names[i] === componentName) {
                 this._entities.remove(entity);
-                this.entityRemoved.emit(entity);
+                this.entityRemoved.emit(entity, removedComponent);
             }
         }
     },

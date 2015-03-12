@@ -74,11 +74,11 @@ var World = module.exports = Class.extend({
 
         // update the entity-family relationship whenever components are
         // added to or removed from the entities
-        entity.onComponentAdded.add(function (entity, component) {
-            self._onComponentAdded(entity, component);
+        entity.onComponentAdded.add(function (entity, componentName, component) {
+            self._onComponentAdded(entity, componentName, component);
         });
-        entity.onComponentRemoved.add(function (entity, component) {
-            self._onComponentRemoved(entity, component);
+        entity.onComponentRemoved.add(function (entity, componentName, component) {
+            self._onComponentRemoved(entity, componentName, component);
         });
 
         this._entities.add(entity);
@@ -217,12 +217,12 @@ var World = module.exports = Class.extend({
      * @param {Entity} entity
      * @param {String} componentName
      */
-    _onComponentRemoved: function (entity, componentName) {
+    _onComponentRemoved: function (entity, componentName, component) {
         var families, familyId;
 
         families = this._families;
         for (familyId in families) {
-            families[familyId].onComponentRemoved(entity, componentName);
+            families[familyId].onComponentRemoved(entity, componentName, component);
         }
     }
 });

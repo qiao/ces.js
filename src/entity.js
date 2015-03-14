@@ -28,7 +28,7 @@ var Entity = module.exports = Class.extend({
          * @readonly
          */
         this.onComponentAdded = new Signal();
-        
+
         /**
          * @public
          * @readonly
@@ -72,8 +72,9 @@ var Entity = module.exports = Class.extend({
      * @param {String} componentName
      */
     removeComponent: function (componentName) {
+        var removedComponent = this._components['$' + componentName];
         this._components['$' + componentName] = undefined;
-        this.onComponentRemoved.emit(this, componentName);
+        this.onComponentRemoved.emit(this, componentName, removedComponent);
     }
 });
 
